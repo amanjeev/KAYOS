@@ -1,4 +1,4 @@
-# KAYOS: Kind Of Stupid Operating System
+# KAYOS
 
 Just a series of stuff from https://os.phil-opp.com/
 
