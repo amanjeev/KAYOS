@@ -1,4 +1,3 @@
-use core::fmt::Write;
 use uart_16550::SerialPort;
 use spin::Mutex;
 use lazy_static::lazy_static;

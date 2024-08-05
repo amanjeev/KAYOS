@@ -7,6 +7,10 @@ edition = "2021"
 name = "should_panic"
 harness = false
 
+[[test]]
+name = "stack_overflow"
+harness = false
+
 [dependencies.lazy_static]
 version = "1.0"
 features = ["spin_no_std"]
@@ -20,5 +24,5 @@ test-timeout = 300
 bootloader = "0.9"
 volatile = "0.2.6"
 spin = "0.5.2"
-x86_64 = "0.14.2"
+x86_64 = { version = "0.14.2", features = ["const_fn"] }
 uart_16550 = "0.2.0"

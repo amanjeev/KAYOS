@@ -7,11 +7,21 @@
 use core::panic::PanicInfo;
 use kayos::println;
 
-static HELLO: &[u8] = b"Hello World!";
-
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
+
+    kayos::init();
+
+
+    fn stack_overflow() {
+        stack_overflow();
+    }
+
+    stack_overflow();
+
+
+    // x86_64::instructions::interrupts::int3();
 
     #[cfg(test)]
     test_main();
