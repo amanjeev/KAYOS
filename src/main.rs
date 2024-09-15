@@ -13,20 +13,13 @@ pub extern "C" fn _start() -> ! {
 
     kayos::init();
 
-
-    fn stack_overflow() {
-        stack_overflow();
-    }
-
-    stack_overflow();
-
-
     // x86_64::instructions::interrupts::int3();
 
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+    kayos::hlt_loop();
 }
 
 /// This function is called on panic.

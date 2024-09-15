@@ -7,21 +7,26 @@
 
 use core::panic::PanicInfo;
 
-pub mod vga_buffer;
-pub mod serial;
-pub mod interrupts;
 pub mod gdt;
+pub mod interrupts;
+pub mod serial;
+pub mod vga_buffer;
 
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() };
+    x86_64::instructions::interrupts::enable();
 }
 
 pub trait Testable {
     fn run(&self) -> ();
 }
 
-impl<T> Testable for T where T: Fn(), {
+impl<T> Testable for T
+where
+    T: Fn(),
+{
     fn run(&self) -> () {
         serial_print!("{}...\t", core::any::type_name::<T>());
         self();
@@ -45,20 +50,26 @@ pub enum QemuExitCode {
     Failed = 0x11,
 }
 
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    init();
     test_main();
-    loop {}
+    hlt_loop();
 }
-
 
 /// Panic handler in test mode
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    hlt_loop();
 }
 
 pub fn test_runner(tests: &[&dyn Testable]) {
